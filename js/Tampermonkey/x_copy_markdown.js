@@ -7,12 +7,14 @@
 // @author       X
 // @note         新增快捷键快速复制标题及链接：Alt + k，修改第22行的代码实现自定义，键值请参见：https://keycode.info/
 // @note         请勿同时使用其它快捷键插件/脚本
-// @match        *://*/*
+// @match        http://*/*
+// @match        https://*/*
 // @icon         https://cdn.iconscout.com/icon/free/png-128/markdown-486861-2364930.png
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
 // @run-at       document-idle
-// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_common.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_common.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_copy_markdown.js
 // ==/UserScript==
 
 

@@ -23,10 +23,8 @@
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
-// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_common.js
-// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_hackui_monkey.js
-// @require      file:///C:/git/dotfiles/common/Browser/Tampermonkey/x_common.js
-// @require      file:///C:/git/dotfiles/common/Browser/Tampermonkey/x_hackui_monkey.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_common.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_hackui_monkey.js
 // ==/UserScript==
 
 function limitVisitSomeSites() {

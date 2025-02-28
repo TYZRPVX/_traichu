@@ -4,14 +4,15 @@
 // @version      0.2
 // @description
 // @author       Body Builder
-// @match        *://*/*
+// @match        http://*/*
+// @match        https://*/*
 // @run-at       document-start
 // @run-at-note  https://tampermonkey.net/documentation.php#_run_at
 // @icon         https://cdn1.iconfinder.com/data/icons/logotypes/32/badge-css-3-128.png
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
-// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_common.js
-// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_hack_css.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_common.js
+// @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_hack_css.js
 // ==/UserScript==
 
 

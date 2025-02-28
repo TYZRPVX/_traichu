@@ -1,3 +1,11 @@
+
+////////////
+
+// cp -R ~/git/dotfiles/common/Browser/Tampermonkey ~/Projects/Github/_traichu/js
+// cd ~/Projects/Github/_traichu/js
+
+////////////
+
 var logBinder = console.log.bind(console);
 var isDebug = true;
 var debug = isDebug ? console.log.bind(console) : function () { };
