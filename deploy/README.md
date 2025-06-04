@@ -14,6 +14,11 @@ Simple deployment scripts for running your _traichu static site locally.
 deploy\deploy.bat
 ```
 
+### PowerShell:
+```powershell
+.\deploy\auto-start.ps1
+```
+
 ### Python (Cross-platform):
 ```bash
 python3 deploy/deploy.py
@@ -60,6 +65,14 @@ python3 deploy/deploy.py --help           # Show help
 python3 deploy/deploy.py --browser        # Open browser automatically
 ```
 
+## Auto-Start on Terminal Launch
+
+### macOS/Linux (Bash/Zsh):
+See [AUTO-START.md](AUTO-START.md) for adding to `.zshrc` or `.bashrc`
+
+### Windows (PowerShell):
+See [POWERSHELL-AUTO-START.md](POWERSHELL-AUTO-START.md) for adding to PowerShell profile
+
 ## What Each Script Does
 
 - **Automatically finds available ports** if your chosen port is busy
@@ -86,5 +99,7 @@ python3 deploy/deploy.py --browser        # Open browser automatically
 ```bash
 chmod +x deploy/deploy.sh
 ```
+
+**PowerShell execution policy?** See [POWERSHELL-AUTO-START.md](POWERSHELL-AUTO-START.md) for setup instructions.
 
 **Can't find index.html?** Make sure you're running from the project root, or the scripts will guide you. 
