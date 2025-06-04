@@ -25,7 +25,7 @@ All scripts accept optional port and host arguments:
 
 ### Examples:
 
-**Default (localhost:8080):**
+**Default (localhost:8080, no browser):**
 ```bash
 ./deploy/deploy.sh
 python3 deploy/deploy.py
@@ -45,19 +45,36 @@ python3 deploy/deploy.py 8080 0.0.0.0
 deploy\deploy.bat 8080 0.0.0.0
 ```
 
+**Open browser automatically:**
+```bash
+./deploy/deploy.sh --browser
+./deploy/deploy.sh 3000 localhost --browser
+python3 deploy/deploy.py --browser
+python3 deploy/deploy.py 3000 --browser
+deploy\deploy.bat --browser
+```
+
 **Python script options:**
 ```bash
 python3 deploy/deploy.py --help           # Show help
-python3 deploy/deploy.py 3000 --no-browser  # Don't open browser
+python3 deploy/deploy.py --browser        # Open browser automatically
 ```
 
 ## What Each Script Does
 
 - **Automatically finds available ports** if your chosen port is busy
-- **Opens browser automatically** (localhost only, for security)
+- **Server only by default** - no automatic browser opening
 - **Includes security headers** for local development
 - **Works from any directory** - automatically finds your project root
 - **Cross-platform compatible** - same functionality on all systems
+
+## Browser Control
+
+**Default behavior:** Scripts start the server but don't open browser automatically.
+
+**To open browser:** Add `--browser` flag to any script.
+
+**Manual access:** Always shows the URL in terminal - just copy/paste to your browser.
 
 ## Troubleshooting
 

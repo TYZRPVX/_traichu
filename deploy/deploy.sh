@@ -1,16 +1,26 @@
 #!/bin/bash
 # _traichu macOS/Linux Deployment Script
 # This script starts a local server to serve the _traichu static site
+# Usage: ./deploy.sh [port] [host] [--browser]
 
 set -e  # Exit on any error
 
 # Default values
 DEFAULT_PORT=8080
 DEFAULT_HOST="localhost"
+OPEN_BROWSER=false
 
 # Parse arguments
 PORT=${1:-$DEFAULT_PORT}
 HOST=${2:-$DEFAULT_HOST}
+
+# Check for --browser flag in any position
+for arg in "$@"; do
+    if [[ "$arg" == "--browser" ]]; then
+        OPEN_BROWSER=true
+        break
+    fi
+done
 
 echo ""
 echo "========================================"
@@ -56,15 +66,19 @@ echo ""
 
 # Try to run the Python deployment script first
 if [ -f "deploy/deploy.py" ]; then
-    python3 deploy/deploy.py "$PORT" "$HOST"
+    if [ "$OPEN_BROWSER" = true ]; then
+        python3 deploy/deploy.py "$PORT" "$HOST" --browser
+    else
+        python3 deploy/deploy.py "$PORT" "$HOST"
+    fi
 else
     # Fallback to simple HTTP server
     echo "📍 Serving at: http://$HOST:$PORT"
     echo "🌐 Open http://$HOST:$PORT in your browser"
     echo ""
     
-    # Try to open browser automatically on macOS (only for localhost)
-    if [[ "$OSTYPE" == "darwin"* ]] && [[ "$HOST" == "localhost" || "$HOST" == "127.0.0.1" ]]; then
+    # Try to open browser automatically on macOS (only if requested and localhost)
+    if [ "$OPEN_BROWSER" = true ] && [[ "$OSTYPE" == "darwin"* ]] && [[ "$HOST" == "localhost" || "$HOST" == "127.0.0.1" ]]; then
         sleep 2 && open "http://$HOST:$PORT" &
     fi
     

@@ -8,9 +8,10 @@ Usage:
     python3 deploy.py [port] [host]
     
 Examples:
-    python3 deploy.py           # Default: localhost:8080
-    python3 deploy.py 3000      # Custom port: localhost:3000
-    python3 deploy.py 3000 0.0.0.0  # Network access: 0.0.0.0:3000
+    python3 deploy.py           # Default: localhost:8080 (no browser)
+    python3 deploy.py 3000      # Custom port: localhost:3000 (no browser)
+    python3 deploy.py 3000 0.0.0.0  # Network access: 0.0.0.0:3000 (no browser)
+    python3 deploy.py --browser # Open browser automatically
 """
 
 import http.server
@@ -67,9 +68,10 @@ def parse_arguments():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 deploy.py              # Default: localhost:8080
-  python3 deploy.py 3000         # Custom port: localhost:3000
-  python3 deploy.py 3000 0.0.0.0 # Network access: 0.0.0.0:3000
+  python3 deploy.py              # Default: localhost:8080 (no browser)
+  python3 deploy.py 3000         # Custom port: localhost:3000 (no browser)
+  python3 deploy.py 3000 0.0.0.0 # Network access: 0.0.0.0:3000 (no browser)
+  python3 deploy.py --browser    # Open browser automatically
         """
     )
     
@@ -89,9 +91,9 @@ Examples:
     )
     
     parser.add_argument(
-        '--no-browser', 
+        '--browser', 
         action='store_true',
-        help='Do not open browser automatically'
+        help='Open browser automatically'
     )
     
     return parser.parse_args()
@@ -138,8 +140,8 @@ def main():
             print("🔧 Press Ctrl+C to stop the server")
             print("-" * 50)
             
-            # Open browser automatically (unless disabled)
-            if not args.no_browser and args.host in ['localhost', '127.0.0.1']:
+            # Open browser only if explicitly requested
+            if args.browser and args.host in ['localhost', '127.0.0.1']:
                 try:
                     webbrowser.open(server_url)
                     print(f"🌐 Opening {server_url} in your default browser...")
