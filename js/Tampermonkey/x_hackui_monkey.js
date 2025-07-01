@@ -136,7 +136,7 @@ function handleNotion() {
 		readModeCss(cookie);
 	}
 	if (/notion.so\/zhuoxu/g.test(X.site)) {
-		changeThemeColor("#ffffff");
+		changeThemeColor("#dde3e9");
 		readMode();
 		scroll();
 		setInterval(ad, 10000);

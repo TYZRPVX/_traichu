@@ -2,7 +2,7 @@
 // @name         X Copy MarkDown
 // @namespace    https://gist.github.com/vhxubo/e94b0cceadf0291050f05ab1c0bb19c9
 // @homepage     https://gist.github.com/vhxubo/e94b0cceadf0291050f05ab1c0bb19c9
-// @version      0.4
+// @version      0.5
 // @description  快速复制 MarkDown 格式的超链接到剪贴板，格式: [标题](网址)
 // @author       X
 // @note         新增快捷键快速复制标题及链接：Alt + k，修改第22行的代码实现自定义，键值请参见：https://keycode.info/
@@ -16,6 +16,11 @@
 // @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_common.js
 // @require      https://cdn.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_copy_markdown.js
 // ==/UserScript==
+
+// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_common.js
+// @require      file:///Users/x/git/dotfiles/common/Browser/Tampermonkey/x_copy_markdown.js
+// @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_common.js
+// @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_copy_markdown.js
 
 
 function getRootDomain(url) {
@@ -56,7 +61,7 @@ function highlightCopyComplex(scene) {
 	switch (scene) {
 		case MarkDown:
 			if (clearTitle.search("[|-]") == -1) {
-				chars = `[${clearTitle} • ${rootDomain}](${document.URL})`;
+				chars = `[${clearTitle} ${rootDomain}](${document.URL})`;
 			} else {
 				chars = `[${clearTitle}](${document.URL})`;
 			}
@@ -81,11 +86,14 @@ function highlightCopyComplex(scene) {
 			GM_setClipboard(chars);
 			break;
 	}
-	log(`${document.title} -> ${clearTitle} at ${rootDomain}`);
+	log(`${document.title} -> ${clearTitle} FULL: ${document.URL} ROOT: ${rootDomain}`);
 	showToast(`${chars}`);
 }
 
 function main() {
+	
+	if (window.top !== window.self) return;
+
 	GM_registerMenuCommand("MarkDown Title `[Title](URL)`", () => highlightCopyComplex(MarkDown));
 	GM_registerMenuCommand("// Rich Title //", () => highlightCopyComplex(RichTitle));
 	GM_registerMenuCommand("Title with URL", () => highlightCopyComplex(TitleUrl));
