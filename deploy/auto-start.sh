@@ -5,7 +5,7 @@
 
 # Configuration
 TRAICHU_DIR="/Users/x/Projects/Github/_traichu"  # Update this path to your project
-TRAICHU_PORT=8080
+TRAICHU_PORT=8888
 TRAICHU_HOST="localhost"
 PIDFILE="$TRAICHU_DIR/.traichu.pid"
 
