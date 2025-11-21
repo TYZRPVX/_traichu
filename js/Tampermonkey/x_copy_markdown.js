@@ -22,6 +22,10 @@
 // @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_common.js
 // @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_copy_markdown.js
 
+// z _traichu && cd js
+// node Tampermonkey/sync_tampermonkey.js
+// FORCE CDN REFRESH https://purge.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_copy_markdown.js
+// FORCE REFRESH TAMERMONKEY chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=a97b683d-6889-4884-b41a-b5f56dca0b81+externals
 
 function getRootDomain(url) {
 	let domain = new URL(url).hostname;
@@ -101,7 +105,6 @@ function main() {
 
 	document.onkeydown = function (event) {
 		// 74 is <j>, 75 is <k>, https://www.toptal.com/developers/keycode
-		console.log(`Key: ${event.key}, KeyCode: ${event.keyCode}`);
 		if (event.altKey && event.keyCode == 74) {
 			highlightCopyComplex(RichTitle);
 		}
