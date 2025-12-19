@@ -22,29 +22,18 @@
 // @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_common.js
 // @require      file://C:/git/dotfiles/common/Browser/Tampermonkey/x_copy_markdown.js
 
+// z _traichu && cd js
+// node Tampermonkey/sync_tampermonkey.js
+// GIT PUSH
+// FORCE CDN REFRESH https://purge.jsdelivr.net/gh/TYZRPVX/_traichu@main/js/Tampermonkey/x_copy_markdown.js
+// FORCE REFRESH TAMERMONKEY chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=a97b683d-6889-4884-b41a-b5f56dca0b81+externals
 
-function getRootDomain(url) {
-	let domain = new URL(url).hostname;
-	const splitDomain = domain.split('.').slice(-2);
-	const rootDomain = splitDomain.join('.');
-	return rootDomain;
-}
-
-function splitClearTitle(url, title) {
-
-	// Check if the URL matches the pattern
-	if (/git.garena.com/.test(url)) {
-		const splitParts = title.split('·');
-		return splitParts[0];
-	}
-	if (/jira.shopee.io/.test(url)) {
-		const removeHeaders = title.replace(/【.+】/g, '[Tech] ');
-		const lastIndex = removeHeaders.lastIndexOf("-");
-		const finalString = lastIndex !== -1 ? removeHeaders.substring(0, lastIndex) : removeHeaders;
-		return finalString;
-	}
-
-	return title;
+function getSiteName(url) {
+	let hostname = new URL(url).hostname;
+	hostname = hostname.replace(/^www\./, '');
+	// Get the main domain name (e.g., github.com -> github, google.com -> google)
+	const mainDomain = hostname.split('.')[0];
+	return mainDomain;
 }
 
 const MarkDown = "MarkDown";
@@ -55,13 +44,13 @@ const RichTitle = "RichTitle";
 
 function highlightCopyComplex(scene) {
 
-	const clearTitle = splitClearTitle(document.URL, document.title);
-	const rootDomain = getRootDomain(document.URL);
+	const clearTitle = document.title;
+	const siteName = getSiteName(document.URL);
 	var chars = "";
 	switch (scene) {
 		case MarkDown:
 			if (clearTitle.search("[|-]") == -1) {
-				chars = `[${clearTitle} ${rootDomain}](${document.URL})`;
+				chars = `[${clearTitle} - ${siteName}](${document.URL})`;
 			} else {
 				chars = `[${clearTitle}](${document.URL})`;
 			}
@@ -86,13 +75,139 @@ function highlightCopyComplex(scene) {
 			GM_setClipboard(chars);
 			break;
 	}
-	log(`${document.title} -> ${clearTitle} FULL: ${document.URL} ROOT: ${rootDomain}`);
+	// log(`${document.title} -> ${clearTitle} FULL: ${document.URL} SITE: ${siteName}`);
 	showToast(`${chars}`);
+}
+
+function createCopyMenu() {
+	const menuItems = [
+		{ label: 'MarkDown [Title](URL)', action: MarkDown, key: 'K' },
+		{ label: 'Title with URL', action: TitleUrl, key: 'U' },
+		{ label: 'Rich Title (HTML)', action: RichTitle, key: '' },
+		{ label: 'Only Plain Title', action: TitleOnly, key: '' },
+		{ label: 'Only URL', action: UrlOnly, key: '' }
+	];
+
+	let selectedIndex = 0;
+	let menuDiv = null;
+
+	function showMenu() {
+		if (menuDiv) return; // Already showing
+
+		menuDiv = document.createElement('div');
+		menuDiv.style.cssText = `
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: #2b2b2b;
+			border: 2px solid #555;
+			border-radius: 8px;
+			padding: 10px;
+			z-index: 999999;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+			font-family: monospace;
+			min-width: 300px;
+		`;
+
+		const title = document.createElement('div');
+		title.textContent = 'Copy Format';
+		title.style.cssText = `
+			color: #fff;
+			font-weight: bold;
+			padding: 8px;
+			border-bottom: 1px solid #555;
+			margin-bottom: 5px;
+		`;
+		menuDiv.appendChild(title);
+
+		menuItems.forEach((item, index) => {
+			const itemDiv = document.createElement('div');
+			itemDiv.textContent = `${item.label}${item.key ? ' (Alt+' + item.key + ')' : ''}`;
+			itemDiv.style.cssText = `
+				padding: 8px 12px;
+				color: #ddd;
+				cursor: pointer;
+				border-radius: 4px;
+				margin: 2px 0;
+			`;
+			itemDiv.dataset.index = index;
+			
+			itemDiv.onmouseover = () => {
+				selectedIndex = index;
+				updateSelection();
+			};
+			
+			itemDiv.onclick = () => {
+				executeAction(item.action);
+			};
+			
+			menuDiv.appendChild(itemDiv);
+		});
+
+		document.body.appendChild(menuDiv);
+		updateSelection();
+	}
+
+	function updateSelection() {
+		if (!menuDiv) return;
+		const items = menuDiv.querySelectorAll('div[data-index]');
+		items.forEach((item, index) => {
+			if (index === selectedIndex) {
+				item.style.background = '#0078d4';
+				item.style.color = '#fff';
+			} else {
+				item.style.background = 'transparent';
+				item.style.color = '#ddd';
+			}
+		});
+	}
+
+	function hideMenu() {
+		if (menuDiv) {
+			menuDiv.remove();
+			menuDiv = null;
+		}
+	}
+
+	function executeAction(action) {
+		hideMenu();
+		highlightCopyComplex(action);
+	}
+
+	function handleKeyDown(event) {
+		if (!menuDiv) return;
+
+		switch(event.key) {
+			case 'ArrowDown':
+				event.preventDefault();
+				selectedIndex = (selectedIndex + 1) % menuItems.length;
+				updateSelection();
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+				updateSelection();
+				break;
+			case 'Enter':
+				event.preventDefault();
+				executeAction(menuItems[selectedIndex].action);
+				break;
+			case 'Escape':
+				event.preventDefault();
+				hideMenu();
+				break;
+		}
+	}
+
+	return { showMenu, hideMenu, handleKeyDown };
 }
 
 function main() {
 	
 	if (window.top !== window.self) return;
+
+	const copyMenu = createCopyMenu();
 
 	GM_registerMenuCommand("MarkDown Title `[Title](URL)`", () => highlightCopyComplex(MarkDown));
 	GM_registerMenuCommand("// Rich Title //", () => highlightCopyComplex(RichTitle));
@@ -100,18 +215,18 @@ function main() {
 	GM_registerMenuCommand("Only Plain Title", () => highlightCopyComplex(TitleOnly));
 
 	document.onkeydown = function (event) {
-		// 74 is <j>, 75 is <k>, https://www.toptal.com/developers/keycode
-		console.log(`Key: ${event.key}, KeyCode: ${event.keyCode}`);
-		if (event.altKey && event.keyCode == 74) {
-			highlightCopyComplex(RichTitle);
+		// Handle menu navigation when menu is open
+		copyMenu.handleKeyDown(event);
+
+		// 73 is <i>, 74 is <j>, 75 is <k>, https://www.toptal.com/developers/keycode
+		if (event.altKey && event.shiftKey && event.keyCode == 75) { // Alt+Shift+K
+			event.preventDefault();
+			copyMenu.showMenu();
 		}
-		if (event.altKey && event.keyCode == 75) {
+		if (event.altKey && event.keyCode == 75) { // Alt+K
 			highlightCopyComplex(MarkDown);
 		}
-		if (event.altKey && event.keyCode == 76) {
-			highlightCopyComplex(UrlOnly);
-		}
-		if (event.altKey && event.keyCode == 85) { // u
+		if (event.altKey && event.keyCode == 85) { // Alt+U
 			highlightCopyComplex(TitleUrl);
 		}
 	}

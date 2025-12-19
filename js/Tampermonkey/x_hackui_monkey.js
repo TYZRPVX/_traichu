@@ -70,7 +70,7 @@ function handleMTeam() {
 
 function handleDida() {
 	if (/dida365/g.test(X.site)) {
-		changeThemeColor("#bcb2e5");
+		changeThemeColor("#26325c");
 	}
 }
 
